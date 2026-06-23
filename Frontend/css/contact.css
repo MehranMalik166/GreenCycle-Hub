@@ -1,0 +1,211 @@
+
+        /* ----- custom styles ----- */
+        * {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f7f2;
+        }
+
+        /* glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 195, 74, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 30, 10, 0.08);
+        }
+
+        .glass-dark {
+            background: rgba(15, 59, 44, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 195, 74, 0.15);
+        }
+
+        /* Contact info cards */
+        .info-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(139, 195, 74, 0.1);
+            background: white;
+        }
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -12px rgba(0, 40, 10, 0.2);
+            border-color: #8bc34a;
+        }
+        .info-card:hover .info-icon {
+            transform: scale(1.1) rotate(-5deg);
+            background: #2d7a5a;
+            color: white;
+        }
+
+        .info-icon {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #d4edb0;
+            color: #2d7a5a;
+        }
+
+        /* Form inputs */
+        .form-input {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+        }
+        .form-input:focus {
+            border-color: #8bc34a;
+            box-shadow: 0 0 0 4px rgba(139, 195, 74, 0.15);
+            outline: none;
+            transform: translateY(-1px);
+        }
+        .form-input:hover {
+            border-color: #b5e48c;
+        }
+        .form-input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #0f3b2c;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* Button */
+        .btn-primary {
+            background: linear-gradient(135deg, #8bc34a, #7cb342);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(139, 195, 74, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(139, 195, 74, 0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* FAQ cards */
+        .faq-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 195, 74, 0.1);
+            background: white;
+            cursor: pointer;
+        }
+        .faq-card:hover {
+            border-color: #8bc34a;
+            box-shadow: 0 8px 24px -8px rgba(0, 40, 10, 0.12);
+        }
+        .faq-card .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+        .faq-card.open .faq-answer {
+            max-height: 200px;
+            opacity: 1;
+            padding-top: 0.75rem;
+        }
+        .faq-card .faq-icon {
+            transition: transform 0.3s ease;
+        }
+        .faq-card.open .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Success message */
+        .success-message {
+            background: #d4edb0;
+            color: #0f3b2c;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #8bc34a;
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Error message */
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        .error-msg.show {
+            display: block;
+        }
+
+        /* Section reveal */
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Pulse CTA */
+        .pulse-cta {
+            animation: pulseCta 2.5s ease-in-out infinite;
+        }
+        @keyframes pulseCta {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(139, 195, 74, 0); }
+        }
+
+        /* Floating element */
+        .float-element {
+            animation: floatElement 6s ease-in-out infinite;
+        }
+        @keyframes floatElement {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Footer CTA banner */
+        .cta-banner {
+            background: linear-gradient(135deg, #0f3b2c, #1a5a44);
+            border: 1px solid rgba(139, 195, 74, 0.2);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .spinner.show {
+            display: inline-block;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+  

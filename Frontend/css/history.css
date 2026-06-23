@@ -1,0 +1,366 @@
+/* ----- custom styles ----- */
+* {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f7f2;
+}
+
+/* glassmorphism */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 195, 74, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 30, 10, 0.08);
+}
+
+.glass-dark {
+    background: rgba(15, 59, 44, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 195, 74, 0.15);
+}
+
+/* summary cards */
+.summary-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(139, 195, 74, 0.1);
+    background: white;
+}
+.summary-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -12px rgba(0, 40, 10, 0.2);
+    border-color: #8bc34a;
+}
+.summary-card:hover .summary-icon {
+    transform: scale(1.1) rotate(-5deg);
+    background: #2d7a5a;
+    color: white;
+}
+
+.summary-icon {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #d4edb0;
+    color: #2d7a5a;
+}
+
+/* ============================================
+   TABLE STYLES WITH FIX
+   ============================================ */
+
+.history-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.history-table thead th {
+    background: linear-gradient(135deg, #0f3b2c, #1a5a44);
+    color: white;
+    padding: 1rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: left;
+    border: none;
+}
+.history-table thead th:first-child {
+    border-radius: 12px 0 0 0;
+}
+.history-table thead th:last-child {
+    border-radius: 0 12px 0 0;
+}
+
+/* ============================================
+   FIX: TABLE BODY VISIBILITY
+   ============================================ */
+
+#historyTableBody {
+    display: table-row-group !important;
+    background: white !important;
+}
+
+#historyTableBody tr {
+    display: table-row !important;
+    background: white !important;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid #f0f7f2;
+}
+
+#historyTableBody td {
+    display: table-cell !important;
+    padding: 0.9rem 1.2rem !important;
+    color: #1a5a44 !important;
+    font-size: 0.95rem !important;
+    border-bottom: 1px solid #e8f0e8 !important;
+    background: white !important;
+}
+
+#historyTableBody tr:hover {
+    background: rgba(139, 195, 74, 0.05) !important;
+}
+
+#historyTableBody tr:last-child td {
+    border-bottom: none;
+}
+#historyTableBody tr:last-child td:first-child {
+    border-radius: 0 0 0 12px;
+}
+#historyTableBody tr:last-child td:last-child {
+    border-radius: 0 0 12px 0;
+}
+
+/* Table container */
+.table-container {
+    display: block !important;
+    overflow-x: auto !important;
+}
+
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+    background: #f0f7f2;
+    border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+    background: #8bc34a;
+    border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #7cb342;
+}
+
+/* status badge */
+.badge-success {
+    background: #d4edb0;
+    color: #0f3b2c;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* form inputs */
+.filter-input {
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+    background: white;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    width: 100%;
+}
+.filter-input:focus {
+    border-color: #8bc34a;
+    box-shadow: 0 0 0 4px rgba(139, 195, 74, 0.15);
+    outline: none;
+}
+.filter-input:hover {
+    border-color: #b5e48c;
+}
+
+/* empty state */
+.empty-state {
+    animation: floatEmpty 4s ease-in-out infinite;
+}
+@keyframes floatEmpty {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+/* pagination */
+.page-btn {
+    transition: all 0.3s ease;
+    border: 2px solid #e5e7eb;
+    color: #1a5a44;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 500;
+    background: white;
+    cursor: pointer;
+}
+.page-btn:hover:not(.active):not(.disabled) {
+    border-color: #8bc34a;
+    background: rgba(139, 195, 74, 0.05);
+    transform: translateY(-2px);
+}
+.page-btn.active {
+    background: #2d7a5a;
+    color: white;
+    border-color: #2d7a5a;
+}
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* mobile card */
+.history-card {
+    background: white;
+    border: 1px solid rgba(139, 195, 74, 0.15);
+    border-radius: 16px;
+    padding: 1.2rem;
+    transition: all 0.3s ease;
+}
+.history-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 40, 10, 0.12);
+    border-color: #8bc34a;
+}
+.history-card .label {
+    color: #1a5a44;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+.history-card .value {
+    color: #0f3b2c;
+    font-weight: 500;
+}
+
+/* btn primary */
+.btn-primary {
+    background: linear-gradient(135deg, #8bc34a, #7cb342);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(139, 195, 74, 0.3);
+}
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(139, 195, 74, 0.4);
+}
+
+/* section reveal */
+.section-hidden {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.section-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* pulse CTA */
+.pulse-cta {
+    animation: pulseCta 2.5s ease-in-out infinite;
+}
+@keyframes pulseCta {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(139, 195, 74, 0.4); }
+    50% { box-shadow: 0 0 0 20px rgba(139, 195, 74, 0); }
+}
+
+/* floating element */
+.float-element {
+    animation: floatElement 6s ease-in-out infinite;
+}
+@keyframes floatElement {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+
+/*  */
+
+
+/* ============================================
+   FORCE TABLE VISIBILITY - FINAL FIX
+   ============================================ */
+
+/* Table body ko force karo */
+#historyTableBody {
+    display: table-row-group !important;
+    background: white !important;
+    width: 100% !important;
+}
+
+/* Table rows ko force karo */
+#historyTableBody tr {
+    display: table-row !important;
+    background: white !important;
+}
+
+/* Table cells ko force karo */
+#historyTableBody td {
+    display: table-cell !important;
+    padding: 12px 15px !important;
+    color: #1a5a44 !important;
+    font-size: 14px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    background: white !important;
+}
+
+/* Table container */
+.table-container {
+    display: block !important;
+    overflow: visible !important;
+}
+
+/* Badge */
+.badge-success {
+    display: inline-block !important;
+    background: #d4edda !important;
+    color: #155724 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+
+
+/* ============================================
+   FINAL FIX - FORCE TABLE VISIBILITY
+   ============================================ */
+
+/* Table body ko force visible karo */
+#historyTableBody {
+    display: table-row-group !important;
+    background: white !important;
+    width: 100% !important;
+}
+
+/* Table rows ko force visible karo */
+#historyTableBody tr {
+    display: table-row !important;
+    background: white !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Table cells ko force visible karo */
+#historyTableBody td {
+    display: table-cell !important;
+    padding: 12px 15px !important;
+    color: #1a5a44 !important;
+    font-size: 14px !important;
+    background: white !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Badge ko visible karo */
+.badge-success {
+    display: inline-block !important;
+    background: #d4edda !important;
+    color: #155724 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Table container */
+.table-container {
+    display: block !important;
+    overflow: visible !important;
+    background: white !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
+}
+
+/* History table */
+.history-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    background: white !important;
+}
