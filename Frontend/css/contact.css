@@ -209,3 +209,55 @@
             to { transform: rotate(360deg); }
         }
   
+
+        /* kg tbn*/
+
+        /* ============================================
+   RADIO BUTTON UNIT TOGGLE
+   ============================================ */
+.unit-radio {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.unit-radio .unit-label {
+    background: transparent;
+    color: #1a5a44;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+}
+
+.unit-radio:hover .unit-label {
+    background: rgba(139, 195, 74, 0.1);
+    transform: scale(1.05);
+}
+
+/* Selected state - Radio checked */
+.unit-radio input[type="radio"]:checked + .unit-label {
+    background: #2d7a5a;
+    color: white;
+    box-shadow: 0 2px 8px rgba(45, 122, 90, 0.3);
+    transform: scale(1.05);
+}
+
+/* Active pulse animation */
+.unit-radio input[type="radio"]:checked + .unit-label {
+    animation: radioSelect 0.3s ease;
+}
+
+@keyframes radioSelect {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1.05); }
+}
+
+/* Glow effect on selected */
+.unit-radio input[type="radio"]:checked + .unit-label::after {
+    content: ' ✓';
+    font-size: 0.7rem;
+}

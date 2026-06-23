@@ -28,14 +28,13 @@
     
     function loadHistory() {
         const tableBody = document.getElementById("historyTableBody");
-        const mobileCards = document.getElementById("mobileCards");
         const emptyState = document.getElementById("emptyState");
         const recordCount = document.getElementById("recordCount");
 
         // Show loading state
         tableBody.innerHTML = `
             <tr>
-                <td colspan="6" class="text-center py-8">
+                <td colspan="7" class="text-center py-8">
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#8bc34a]"></div>
                     <p class="text-gray-500 mt-2">Loading records...</p>
                 </td>
@@ -66,16 +65,14 @@
                 // Update summary cards
                 updateSummaryCards(filteredData);
                 
-                // Render data
+                // Render table
                 renderTable(filteredData);
-                renderMobileCards(filteredData);
                 renderPagination(filteredData);
                 
                 // Show/hide empty state
                 if (filteredData.length === 0) {
                     emptyState.classList.remove('hidden');
                     tableBody.innerHTML = '';
-                    mobileCards.innerHTML = '';
                 } else {
                     emptyState.classList.add('hidden');
                 }
@@ -84,7 +81,7 @@
                 console.error("❌ History Error:", error);
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="text-center py-8 text-red-500">
+                        <td colspan="7" class="text-center py-8 text-red-500">
                             <i class="fas fa-exclamation-circle text-2xl"></i>
                             <p class="mt-2">Error loading data. Please try again.</p>
                             <p class="text-sm text-gray-400">${error.message}</p>
@@ -95,80 +92,24 @@
     }
 
     // ============================================================
-    // 4. RENDER TABLE
+    // 4. RENDER TABLE (WITH UNIT DISPLAY)
     // ============================================================
     
- function renderTable(data) {
-    const tableBody = document.getElementById("historyTableBody");
-    
-    if (!tableBody) {
-        console.error("❌ historyTableBody not found!");
-        return;
-    }
-    
-    console.log("📊 Rendering table with data:", data);
-    
-    if (!data || data.length === 0) {
-        tableBody.innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; padding: 40px; color: #6b7280; font-size: 16px;">
-                    No records found
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    const start = (currentPage - 1) * perPage;
-    const end = Math.min(start + perPage, data.length);
-    const pageData = data.slice(start, end);
-
-    let html = '';
-    pageData.forEach((item, index) => {
-        const serialNumber = start + index + 1;
+    function renderTable(data) {
+        const tableBody = document.getElementById("historyTableBody");
         
-        let date = 'N/A';
-        if (item.created_at) {
-            try {
-                date = new Date(item.created_at).toLocaleDateString('en-US', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                });
-            } catch(e) {
-                date = item.created_at;
-            }
+        if (!tableBody) {
+            console.error("❌ historyTableBody not found!");
+            return;
         }
-
-        html += `
-            <tr style="border-bottom: 1px solid #e5e7eb; background: ${index % 2 === 0 ? 'white' : '#f9fbf9'};">
-                <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px;">${serialNumber}</td>
-                <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px;">
-                    <span style="background: #d4edda; color: #155724; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block;">${escapeHtml(item.input_type || 'N/A')}</span>
-                </td>
-                <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; font-weight: 500;">${parseFloat(item.input_weight || 0).toFixed(1)} KG</td>
-                <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px;">${escapeHtml(item.output_type || 'N/A')}</td>
-                <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; font-weight: 500;">${escapeHtml(item.result || 'N/A')}</td>
-                <td style="padding: 12px 18px; color: #6b7280; font-size: 13px;">${date}</td>
-            </tr>
-        `;
-    });
-
-    tableBody.innerHTML = html;
-    console.log("✅ Table rendered with", pageData.length, "rows");
-}
-    // ============================================================
-    // 5. RENDER MOBILE CARDS
-    // ============================================================
-    
-    function renderMobileCards(data) {
-        const mobileCards = document.getElementById("mobileCards");
         
         if (!data || data.length === 0) {
-            mobileCards.innerHTML = `
-                <div class="text-center py-8 text-gray-500">
-                    No records found
-                </div>
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280; font-size: 16px;">
+                        No records found
+                    </td>
+                </tr>
             `;
             return;
         }
@@ -180,44 +121,56 @@
         let html = '';
         pageData.forEach((item, index) => {
             const serialNumber = start + index + 1;
-            const date = item.created_at ? new Date(item.created_at).toLocaleDateString('en-US', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            }) : 'N/A';
+            
+            // Format date
+            let date = 'N/A';
+            if (item.created_at) {
+                try {
+                    date = new Date(item.created_at).toLocaleDateString('en-US', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                } catch(e) {
+                    date = item.created_at;
+                }
+            }
+
+            // Display quantity with unit
+            let quantityDisplay = 'N/A';
+            if (item.display_value && item.display_unit) {
+                const unit = item.display_unit.toUpperCase();
+                quantityDisplay = `${parseFloat(item.display_value).toFixed(2)} ${unit}`;
+            } else {
+                // Fallback: agar purana data hai toh sirf KG dikhao
+                quantityDisplay = `${parseFloat(item.input_weight || 0).toFixed(1)} KG`;
+            }
 
             html += `
-                <div class="history-card">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <span class="badge-success">${escapeHtml(item.input_type || 'N/A')}</span>
-                            <p class="text-xs text-[#1a5a44]/70 mt-1">${date}</p>
-                        </div>
-                        <span class="text-sm font-bold text-[#2d7a5a]">#${serialNumber}</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 mt-3">
-                        <div>
-                            <span class="label">Quantity:</span> 
-                            <span class="value">${parseFloat(item.input_weight || 0).toFixed(1)} KG</span>
-                        </div>
-                        <div>
-                            <span class="label">Converted To:</span> 
-                            <span class="value">${escapeHtml(item.output_type || 'N/A')}</span>
-                        </div>
-                        <div class="col-span-2">
-                            <span class="label">Output:</span> 
-                            <span class="value">${escapeHtml(item.result || 'N/A')}</span>
-                        </div>
-                    </div>
-                </div>
+                <tr style="border-bottom: 1px solid #e5e7eb; background: ${index % 2 === 0 ? 'white' : '#f9fbf9'};">
+                    <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; text-align: center; min-width: 50px;">${serialNumber}</td>
+                    <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; min-width: 130px;">
+                        <span style="background: #d4edda; color: #155724; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; white-space: nowrap;">${escapeHtml(item.input_type || 'N/A')}</span>
+                    </td>
+                    <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; font-weight: 500; min-width: 120px;">
+                        ${quantityDisplay}
+                        <span style="font-size: 11px; color: #6b7280; display: block;">(${parseFloat(item.input_weight || 0).toFixed(1)} KG)</span>
+                    </td>
+                    <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; min-width: 130px;">
+                        <span style="background: #cce5ff; color: #004085; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; white-space: nowrap;">${escapeHtml(item.output_type || 'N/A')}</span>
+                    </td>
+                    <td style="padding: 12px 18px; color: #1a5a44; font-size: 14px; font-weight: 500; min-width: 100px;">${escapeHtml(item.result || 'N/A')}</td>
+                    <td style="padding: 12px 18px; color: #6b7280; font-size: 13px; min-width: 110px; white-space: nowrap;">${date}</td>
+                </tr>
             `;
         });
 
-        mobileCards.innerHTML = html;
+        tableBody.innerHTML = html;
+        console.log("✅ Table rendered with", pageData.length, "rows");
     }
 
     // ============================================================
-    // 6. RENDER PAGINATION
+    // 5. RENDER PAGINATION
     // ============================================================
     
     function renderPagination(data) {
@@ -291,20 +244,19 @@
     }
 
     // ============================================================
-    // 7. GO TO PAGE FUNCTION
+    // 6. GO TO PAGE FUNCTION
     // ============================================================
     
     window.goToPage = function(page) {
         currentPage = page;
         renderTable(filteredData);
-        renderMobileCards(filteredData);
         renderPagination(filteredData);
         // Scroll to top of table
-        document.querySelector('.table-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelector('.table-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     // ============================================================
-    // 8. UPDATE SUMMARY CARDS
+    // 7. UPDATE SUMMARY CARDS
     // ============================================================
     
     function updateSummaryCards(data) {
@@ -341,7 +293,6 @@
         }
 
         summaryContainer.innerHTML = `
-            <!-- Card 1: Total Conversions -->
             <div class="summary-card rounded-2xl p-6 text-center">
                 <div class="summary-icon w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
                    <i class="fas fa-sync-alt"></i>
@@ -356,7 +307,6 @@
                 </p>
             </div>
 
-            <!-- Card 2: Total Plastic Recycled -->
             <div class="summary-card rounded-2xl p-6 text-center">
                 <div class="summary-icon w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
                     <i class="fas fa-weight-scale"></i>
@@ -371,7 +321,6 @@
                 </p>
             </div>
 
-            <!-- Card 3: Most Popular Conversion -->
             <div class="summary-card rounded-2xl p-6 text-center">
                 <div class="summary-icon w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
                     <i class="fas fa-star"></i>
@@ -389,7 +338,7 @@
     }
 
     // ============================================================
-    // 9. FILTER FUNCTIONS
+    // 8. FILTER FUNCTIONS
     // ============================================================
     
     function filterRecords() {
@@ -415,7 +364,6 @@
         // Update UI
         document.getElementById('recordCount').textContent = `Showing ${filteredData.length} records`;
         renderTable(filteredData);
-        renderMobileCards(filteredData);
         renderPagination(filteredData);
         
         // Show/hide empty state
@@ -428,7 +376,7 @@
     }
 
     // ============================================================
-    // 10. UTILITY FUNCTIONS
+    // 9. UTILITY FUNCTIONS
     // ============================================================
     
     function escapeHtml(text) {
@@ -439,7 +387,7 @@
     }
 
     // ============================================================
-    // 11. EVENT LISTENERS
+    // 10. EVENT LISTENERS
     // ============================================================
     
     document.addEventListener('DOMContentLoaded', function() {

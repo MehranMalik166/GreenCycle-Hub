@@ -364,7 +364,7 @@
                     <i class="fas fa-recycle"></i>
                 </div>
 
-                <div class="text-5xl mb-4">🌍</div>
+                <div class="text-5xl mb-4 text-green-300"><i class='fas fa-earth-americas'></i></div>
                 <h2 class="text-2xl md:text-4xl font-bold leading-tight">
                     Together We Can Build a <br />
                     <span class="text-[#b5e48c]">Cleaner Future</span>
@@ -401,7 +401,7 @@
                 
                 <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-4">
-                        <div class="text-4xl">♻️</div>
+                        <div class="text-4xl"><i class="fas fa-recycle"></i></div>
                         <div>
                             <p class="text-lg font-semibold text-[#d4edb0]">
                                 Every small recycling effort contributes to a greener planet.

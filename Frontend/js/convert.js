@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -41,8 +40,130 @@
         return `${day}-${month}-${year}`;
     }
 
-   
-    // Form submit
+    // =============================================
+    // 🟢 KG / TON HANDLING CODE (FIXED)
+    // =============================================
+    const quantityInput = document.getElementById('quantity');
+    const unitLabel = document.getElementById('unitLabel');
+    const kgRadio = document.querySelector('input[name="quantityUnit"][value="kg"]');
+    const tonRadio = document.querySelector('input[name="quantityUnit"][value="ton"]');
+    const hiddenKG = document.getElementById('quantityInKG');
+    
+    // Store the base value in KG
+    let baseValueInKG = 0;
+    
+    // Function to update display based on selected unit
+    function updateDisplay() {
+        const isTon = tonRadio.checked;
+        
+        // Update unit label
+        unitLabel.textContent = isTon ? 'TON' : 'KG';
+        quantityInput.placeholder = isTon ? 'Enter quantity in tons' : 'Enter quantity in kilograms';
+        quantityInput.min = isTon ? '0.01' : '0.1';
+        quantityInput.step = isTon ? '0.01' : '0.1';
+        
+        // Convert and display value
+        if (baseValueInKG > 0) {
+            if (isTon) {
+                // Convert KG to Ton (divide by 1000)
+                quantityInput.value = (baseValueInKG / 1000).toFixed(3);
+            } else {
+                // Show in KG
+                quantityInput.value = baseValueInKG.toFixed(1);
+            }
+        }
+        
+        // Update hidden field with KG value
+        hiddenKG.value = baseValueInKG;
+        
+        // Update error message
+        const minQty = isTon ? 0.01 : 0.1;
+        quantityError.textContent = `Please enter a valid quantity (minimum ${minQty} ${isTon ? 'TON' : 'KG'})`;
+    }
+    
+    // Function to update base value when user types
+    function updateBaseValue() {
+        const currentValue = parseFloat(quantityInput.value);
+        const isTon = tonRadio.checked;
+        
+        if (!isNaN(currentValue) && currentValue > 0) {
+            if (isTon) {
+                // Convert Ton to KG (multiply by 1000)
+                baseValueInKG = currentValue * 1000;
+            } else {
+                // Value is already in KG
+                baseValueInKG = currentValue;
+            }
+        } else {
+            baseValueInKG = 0;
+        }
+        
+        // Update hidden field
+        hiddenKG.value = baseValueInKG;
+        validateQuantity();
+    }
+    
+    // Validation function
+    function validateQuantity() {
+        const value = parseFloat(quantityInput.value);
+        const isTon = tonRadio.checked;
+        const minValue = isTon ? 0.01 : 0.1;
+        
+        if (!isNaN(value) && value >= minValue && value > 0) {
+            quantityError.style.display = 'none';
+            quantityInput.classList.remove('border-red-500');
+            return true;
+        } else {
+            quantityError.style.display = 'block';
+            quantityInput.classList.add('border-red-500');
+            return false;
+        }
+    }
+    
+    // Event: When user types in input
+    quantityInput.addEventListener('input', function() {
+        updateBaseValue();
+    });
+    
+    // Event: When user selects KG
+    kgRadio.addEventListener('change', function() {
+        if (this.checked) {
+            // Convert current value from Ton to KG
+            const currentValue = parseFloat(quantityInput.value);
+            if (!isNaN(currentValue) && currentValue > 0) {
+                baseValueInKG = currentValue * 1000;
+            } else {
+                baseValueInKG = 0;
+            }
+            updateDisplay();
+            validateQuantity();
+        }
+    });
+    
+    // Event: When user selects Ton
+    tonRadio.addEventListener('change', function() {
+        if (this.checked) {
+            // Convert current value from KG to Ton
+            const currentValue = parseFloat(quantityInput.value);
+            if (!isNaN(currentValue) && currentValue > 0) {
+                baseValueInKG = currentValue;
+            } else {
+                baseValueInKG = 0;
+            }
+            updateDisplay();
+            validateQuantity();
+        }
+    });
+    
+    // Blur validation
+    quantityInput.addEventListener('blur', validateQuantity);
+    
+    // Initial setup
+    updateDisplay();
+
+    // =============================================
+    // 🟢 FORM SUBMIT (UPDATED WITH UNIT HANDLING)
+    // =============================================
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -59,11 +180,14 @@
             isValid = false;
         }
 
-        // Validate Quantity
+        // Validate Quantity with unit
         const qty = parseFloat(quantity.value);
-        if (!quantity.value || isNaN(qty) || qty < 0.1) {
+        const isTon = tonRadio.checked;
+        const minQty = isTon ? 0.01 : 0.1;
+        
+        if (!quantity.value || isNaN(qty) || qty < minQty) {
             quantity.classList.add('input-error');
-            quantityError.classList.add('show');
+            quantityError.style.display = 'block';
             isValid = false;
         }
 
@@ -83,36 +207,48 @@
             return;
         }
 
-        // varibales define 
+        // ====== VARIABLES WITH UNIT HANDLING ======
+        const plastic = plasticType.value;
+        const qtyValue = parseFloat(quantity.value);
+        const conversion = convertTo.value;
+        const selectedUnit = isTon ? 'ton' : 'kg';
         
-         const plastic = plasticType.value;
-const qtyValue = parseFloat(quantity.value);
-const conversion = convertTo.value;
+        // Get value in KG from hidden field
+        let qtyInKG = parseFloat(hiddenKG.value);
+        
+        // If hidden field is empty, calculate from current value
+        if (!qtyInKG || qtyInKG === 0) {
+            qtyInKG = isTon ? qtyValue * 1000 : qtyValue;
+        }
 
-const rate = conversionRates[conversion];
-const output = (qtyValue * rate.output).toFixed(1);
-const co2Saved = (qtyValue * rate.co2).toFixed(2);
-const token = localStorage.getItem("user_token");
+        const rate = conversionRates[conversion];
+        const output = (qtyInKG * rate.output).toFixed(1);
+        const co2Saved = (qtyInKG * rate.co2).toFixed(2);
+        const token = localStorage.getItem("user_token");
 
-
-        // 
-        // send the data 
+        // Send the data 
         fetch("../Backend/convert.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-           body: `user_token=${token}&input_type=${plastic}&input_weight=${qtyValue}&output_type=${conversion}&result=${output}`
+         body: `user_token=${token}&input_type=${plastic}&input_weight=${qtyInKG}&display_value=${qtyValue}&display_unit=${selectedUnit}&value_in_kg=${qtyInKG}&output_type=${conversion}&result=${output}`
         })
-            .then(res => res.text())
-            .then(data => {
-                console.log(data);
-            });
-        // ===================================
+        .then(res => res.text())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 
         // Update result card
         resultType.textContent = plastic;
-        resultQuantity.textContent = qtyValue + ' KG';
+        
+        // Show quantity with selected unit
+        const displayUnit = isTon ? 'TON' : 'KG';
+        resultQuantity.textContent = `${qtyValue} ${displayUnit}`;
+        
         resultConvertTo.textContent = conversion;
         resultOutput.textContent = `${output} ${rate.unit}`;
         savedCO2.textContent = co2Saved + ' KG';
@@ -139,6 +275,12 @@ const token = localStorage.getItem("user_token");
             resultCard.classList.add('hidden');
             document.querySelectorAll('.form-input').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            // Reset to KG
+            kgRadio.checked = true;
+            baseValueInKG = 0;
+            quantity.value = '';
+            hiddenKG.value = '';
+            updateDisplay();
         }, 100);
     });
 
@@ -185,54 +327,70 @@ const token = localStorage.getItem("user_token");
     };
 
     // ----- ANIMATED COUNTERS -----
-    const counters = document.querySelectorAll('.counter-number');
+  document.addEventListener("DOMContentLoaded", function () {
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const el = entry.target;
-                const target = parseInt(el.getAttribute('data-target'), 10);
-                if (isNaN(target) || el.dataset.animated === 'true') return;
+    // 1️⃣ FIRST: GET DATA FROM PHP API
+    fetch("../Backend/convert.php")
+    .then(r => r.json())
+    .then(data => {
 
-                el.dataset.animated = 'true';
-                animateCounter(el, target);
-            }
+        // set values to HTML
+        document.querySelectorAll(".plastic").forEach(el => {
+            el.dataset.target = data.plastic;
         });
-    }, {
-        threshold: 0.3,
-        rootMargin: '0px 0px -50px 0px'
+
+        document.querySelectorAll(".users").forEach(el => {
+            el.dataset.target = data.users;
+        });
+
+        document.querySelectorAll(".methods").forEach(el => {
+            el.dataset.target = data.methods;
+        });
+
+        document.querySelectorAll(".pollution").forEach(el => {
+            el.dataset.target = data.pollution;
+        });
+
+        // 2️⃣ THEN START COUNTERS AFTER DATA LOAD
+        startCounters();
+
     });
 
-    counters.forEach(counter => observer.observe(counter));
 
-    function animateCounter(element, target) {
-        let current = 0;
-        const increment = Math.ceil(target / 80);
-        const stepTime = 25;
+    // 3️⃣ COUNTER FUNCTION
+    function startCounters() {
 
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
-            }
-            element.textContent = current.toLocaleString();
-        }, stepTime);
+        const counters = document.querySelectorAll('.counter-number');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.target || "0");
+
+                    if (el.dataset.animated) return;
+
+                    el.dataset.animated = "true";
+
+                    let current = 0;
+                    const step = Math.ceil(target / 80);
+
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        el.innerText = current.toLocaleString();
+                    }, 25);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        counters.forEach(c => observer.observe(c));
     }
 
-    // ----- SCROLL REVEAL -----
-    const sections = document.querySelectorAll('.section-hidden');
-
-    const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('section-visible');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
+});
 
     sections.forEach(section => revealObserver.observe(section));
 

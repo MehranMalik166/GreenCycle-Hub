@@ -46,16 +46,88 @@
             letter-spacing: 0.3px;
         }
 
-        /* result card */
-        .result-card {
-            background: linear-gradient(135deg, #0f3b2c, #1a5a44);
-            border: 1px solid rgba(139, 195, 74, 0.3);
-            box-shadow: 0 20px 40px -12px rgba(0, 40, 10, 0.3);
+        /* /* result card */
+         .result-card {
+            background: linear-gradient(145deg, #ffffff, #f8faf8);
+            border: 2px solid #8bc34a;
+            box-shadow: 0 20px 40px -12px rgba(0, 40, 10, 0.25);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8bc34a, #b5e48c, #8bc34a);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: -200% 0; }
+            50% { background-position: 200% 0; }
+        }
+
         .result-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 40, 10, 0.4);
+            transform: scale(1.01);
+            box-shadow: 0 25px 50px -12px rgba(0, 40, 10, 0.3);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e8f0e8;
+            transition: background 0.2s ease;
+        }
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        .result-row:hover {
+            background: rgba(139, 195, 74, 0.05);
+        }
+        .result-label {
+            color: #1a5a44;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .result-value {
+            color: #0f3b2c;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .result-value.highlight {
+            color: #2d7a5a;
+            font-size: 1.1rem;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #0f3b2c, #1a5a44);
+            padding: 1rem 1.5rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .result-header h3 {
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .result-header .badge {
+            background: rgba(139, 195, 74, 0.2);
+            color: #b5e48c;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
         /* info cards */

@@ -102,21 +102,40 @@
                             <div class="error-message" id="plasticTypeError">Please select a plastic type</div>
                         </div>
 
-                        <!-- Quantity -->
-                        <div>
-                            <label for="quantity" class="form-label block mb-2">
-                                <i class="fas fa-weight-scale text-[#8bc34a] mr-2"></i>
-                                Quantity (KG)
-                            </label>
-                            <div class="relative">
-                                <input type="number" id="quantity" class="form-input w-full rounded-xl px-4 py-3" 
-                                       placeholder="Enter quantity in kilograms" min="0.1" step="0.1" />
-                                <div class="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a5a44] text-sm font-medium">
-                                    KG
-                                </div>
-                            </div>
-                            <div class="error-message" id="quantityError">Please enter a valid quantity (minimum 0.1 KG)</div>
-                        </div>
+                  <!-- Quantity with Ton/KG toggle -->
+<div>
+    <label for="quantity" class="form-label block mb-2">
+        <i class="fas fa-weight-scale text-[#8bc34a] mr-2"></i>
+        Quantity
+    </label>
+    
+    <!-- Radio buttons for Ton/KG selection -->
+    <div class="flex gap-4 mb-3">
+        <label class="flex items-center cursor-pointer">
+            <input type="radio" name="quantityUnit" value="kg" checked 
+                   class="w-4 h-4 text-[#1a5a44] focus:ring-[#8bc34a] mr-2" />
+            <span class="text-sm font-medium text-gray-700">Kilogram (KG)</span>
+        </label>
+        <label class="flex items-center cursor-pointer">
+            <input type="radio" name="quantityUnit" value="ton" 
+                   class="w-4 h-4 text-[#1a5a44] focus:ring-[#8bc34a] mr-2" />
+            <span class="text-sm font-medium text-gray-700">Ton (T)</span>
+        </label>
+    </div>
+    
+    <!-- Input field with dynamic unit display -->
+    <div class="relative">
+        <input type="number" id="quantity" class="form-input w-full rounded-xl px-4 py-3" 
+               placeholder="Enter quantity in kilograms" min="0.1" step="0.1" />
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a5a44] text-sm font-medium" id="unitLabel">
+            KG
+        </div>
+    </div>
+    <div class="error-message" id="quantityError">Please enter a valid quantity (minimum 0.1 KG)</div>
+    
+    <!-- Hidden field to store value in KG (for saving to database) -->
+    <input type="hidden" id="quantityInKG" name="quantityInKG" />
+</div>
 
                         <!-- Convert To -->
                         <div>
@@ -158,13 +177,13 @@
                 <div id="resultContainer" class="flex items-center justify-center min-h-[400px]">
                     <!-- Placeholder -->
                     <div id="resultPlaceholder" class="glass-card rounded-3xl p-10 text-center w-full">
-                        <div class="text-7xl mb-4">🔄</div>
+                        <div class="text-7xl mb-4 text-green-800"><i class="fas fa-sync-alt"></i>     </div>
                         <h3 class="text-xl font-bold text-[#0f3b2c]">Ready to Convert</h3>
                         <p class="text-[#1a5a44] mt-2">Fill in the details and click "Generate Result" to see your recycling impact.</p>
                         <div class="mt-6 flex justify-center gap-4">
-                            <span class="text-3xl">♻️</span>
-                            <span class="text-3xl">🌱</span>
-                            <span class="text-3xl">🌍</span>
+                            <span class="text-3xl text-green-800"><i class="fas fa-recycle"></i>  </span>
+                            <span class="text-3xl text-green-800"><i class="fas fa-seedling"></i>  </span>
+                            <span class="text-3xl text-green-800"><i class="fas fa-earth-americas"></i></span>
                         </div>
                     </div>
 
@@ -268,22 +287,30 @@
 
             <div class="grid md:grid-cols-3 gap-6">
                 <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-5xl mb-3">♻️</div>
-                    <div class="counter-number text-3xl md:text-4xl font-bold text-[#2d7a5a]" data-target="28456">0</div>
+                    <div class="text-5xl mb-3 text-green-800"><i class="fas fa-recycle"></i>   </div>
+     <div class="counter-number plastic text-3xl md:text-4xl font-bold text-[#2d7a5a]"
+     data-target="<?php echo $totalPlastic; ?>">
+    0
+</div>
                     <p class="text-[#1a5a44] font-medium mt-1">KG Plastic Recycled</p>
                     <p class="text-sm text-[#1a5a44]/70 mt-2">Reducing waste in landfills</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-5xl mb-3">🌱</div>
-                    <div class="counter-number text-3xl md:text-4xl font-bold text-[#2d7a5a]" data-target="12438">0</div>
+                    <div class="text-5xl mb-3 text-green-800"><i class="fas fa-seedling"></i>  </div>
+            <div class="counter-number pollution  text-3xl md:text-4xl font-bold text-[#2d7a5a]"
+     data-target="<?php echo $co2Reduced; ?>">
+    0
+</div>
                     <p class="text-[#1a5a44] font-medium mt-1">KG CO₂ Reduced</p>
                     <p class="text-sm text-[#1a5a44]/70 mt-2">Lowering carbon footprint</p>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-5xl mb-3">🌍</div>
-                    <div class="counter-number text-3xl md:text-4xl font-bold text-[#2d7a5a]" data-target="9876">0</div>
+                    <div class="text-5xl mb-3 text-green-800"><i class="fas fa-earth-americas"></i>        </div>
+                    <div class="counter-number users text-3xl md:text-4xl font-bold text-[#2d7a5a]" data-target="9876"     
+                     data-target="<?php echo $co2Reduced; ?>">
+    0></div>
                     <p class="text-[#1a5a44] font-medium mt-1">Users Educated</p>
                     <p class="text-sm text-[#1a5a44]/70 mt-2">Building awareness</p>
                 </div>
@@ -380,7 +407,7 @@
                     <i class="fas fa-recycle"></i>
                 </div>
 
-                <div class="text-5xl mb-4">🌍</div>
+                <div class="text-5xl mb-4 text-green-300"><i class='fas fa-earth-americas'></i></div>
                 <h2 class="text-2xl md:text-4xl font-bold leading-tight">
                     Every Kilogram of Plastic <br />
                     <span class="text-[#b5e48c]">Recycled Makes a Difference</span>

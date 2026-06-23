@@ -150,28 +150,30 @@
 <!-- ============================================================
 DESKTOP TABLE VIEW - FIXED
 ============================================================ -->
-<div style="background: white; border-radius: 16px; border: 1px solid #e5e7eb; padding: 0; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden;">
-    <table style="width: 100%; border-collapse: collapse; background: white; font-family: 'Segoe UI', sans-serif;">
+<!-- Table Container with Horizontal Scroll -->
+<!-- Table Container with Fixed Height -->
+<div class="table-container" style="overflow-x: auto; overflow-y: auto; max-height: 500px; -webkit-overflow-scrolling: touch; border-radius: 12px; border: 1px solid #e8f0e8;">
+    <table style="width: 100%; min-width: 700px; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
         <thead>
-            <tr style="background: #0f3b2c; color: white;">
-                <th style="padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #8bc34a;">#</th>
-                <th style="padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #8bc34a;">Plastic Type</th>
-                <th style="padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #8bc34a;">Quantity (KG)</th>
-                <th style="padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #8bc34a;">Converted To</th>
-                <th style="padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #8bc34a;">Output Produced</th>
-                <th style="padding: 14px 18px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #8bc34a;">Conversion Date</th>
+            <tr style="background: #1a5a44; color: white; position: sticky; top: 0; z-index: 10;">
+                <th style="padding: 14px 18px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">#</th>
+                <th style="padding: 14px 18px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Plastic Type</th>
+                <th style="padding: 14px 18px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Quantity</th>
+                <th style="padding: 14px 18px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Converted To</th>
+                <th style="padding: 14px 18px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Output</th>
+                <th style="padding: 14px 18px; text-align: left; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;">Date</th>
             </tr>
         </thead>
-        <tbody id="historyTableBody" style="background: white; display: table-row-group; width: 100%;">
-            <!-- Data will be loaded by JavaScript -->
+        <tbody id="historyTableBody">
+            <!-- Data will be loaded here -->
         </tbody>
     </table>
 </div>
 
             <!-- MOBILE CARD VIEW -->
-            <div id="mobileCards" class="md:hidden space-y-4 mt-6">
-                <!-- Data will be loaded by JavaScript -->
-            </div>
+            <!-- <div id="mobileCards" class="md:hidden space-y-4 mt-6">
+                Data will be loaded by JavaScript
+            </div> -->
 
             <!-- EMPTY STATE -->
             <div id="emptyState" class="hidden text-center py-16">
@@ -216,7 +218,7 @@ DESKTOP TABLE VIEW - FIXED
                     <i class="fas fa-recycle"></i>
                 </div>
 
-                <div class="text-5xl mb-4">🔄</div>
+                <div class="text-5xl mb-4 text-green-300"><i class="fas fa-sync-alt"></i>  </div>
                 <h2 class="text-2xl md:text-4xl font-bold leading-tight">
                     Convert More <span class="text-[#b5e48c]">Plastic Waste</span>
                 </h2>

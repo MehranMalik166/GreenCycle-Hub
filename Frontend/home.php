@@ -1,5 +1,59 @@
 <!-- we add the navabr  -->
 <?php include 'includes/navbar.php'; ?>
+<?php
+include "../Backend/configure/data_base.php";
+
+/* =========================
+   ALL QUERIES FIRST
+========================= */
+
+$plasticQuery = mysqli_query($conn, "
+    SELECT SUM(value_in_kg) AS total_kg
+    FROM conversions
+");
+$totalPlastic = mysqli_fetch_assoc($plasticQuery)['total_kg'] ?? 0;
+
+$tonsRecycled = round($totalPlastic / 1000);
+
+$userQuery = mysqli_query($conn, "
+    SELECT COUNT(DISTINCT user_token) AS total_users
+    FROM conversions
+");
+$totalPartners = mysqli_fetch_assoc($userQuery)['total_users'] ?? 0;
+
+$efficiency = 98;
+
+
+
+$result = mysqli_query($conn, "SELECT COUNT(*) as total FROM conversions");
+$row = mysqli_fetch_assoc($result);
+$totalRows = $row['total'] ?? 0;
+
+$userQuery = mysqli_query($conn, "
+    SELECT COUNT(DISTINCT user_token) AS total_users
+    FROM conversions
+");
+$userData = mysqli_fetch_assoc($userQuery);
+$totalUsers = $userData['total_users'] ?? 0;
+
+$plasticQuery = mysqli_query($conn, "
+    SELECT SUM(value_in_kg) AS total_kg
+    FROM conversions
+");
+$plasticData = mysqli_fetch_assoc($plasticQuery);
+$totalPlastic = $plasticData['total_kg'] ?? 0;
+
+$methodQuery = mysqli_query($conn, "
+    SELECT COUNT(DISTINCT input_type) AS total_methods
+    FROM conversions
+");
+$methodData = mysqli_fetch_assoc($methodQuery);
+$totalMethods = $methodData['total_methods'] ?? 0;
+
+$pollutionReduced = ($totalPlastic > 0) ? round($totalPlastic / 1000, 2) : 0;
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -29,52 +83,141 @@
         </div>
         <div class="absolute bottom-0 left-0 w-64 h-64 bg-[#8bc34a] rounded-full opacity-5 -translate-x-1/2 translate-y-1/2"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <!-- left content -->
-                <div class="space-y-6">
-                    <div class="inline-flex items-center gap-2 bg-[#8bc34a]/20 rounded-full px-4 py-2 text-sm font-medium text-[#b5e48c] backdrop-blur-sm border border-[#8bc34a]/30">
-                        <i class="fas fa-recycle"></i>
-                        <span>Plastic Waste Management</span>
+   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+        
+        <!-- ==========================================
+             LEFT CONTENT
+             ========================================== -->
+        <div class="space-y-6">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-[#8bc34a]/20 rounded-full px-4 py-2 text-sm font-medium text-[#b5e48c] backdrop-blur-sm border border-[#8bc34a]/30">
+                <i class="fas fa-recycle text-[#8bc34a]"></i>
+                <span>Plastic Waste Management</span>
+            </div>
+
+            <!-- Heading -->
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight text-white">
+                Transform Plastic Waste
+                <br />
+                <span class="bg-gradient-to-r from-[#d4edb0] to-[#b5e48c] bg-clip-text text-transparent">
+                    Into Useful Products
+                </span>
+            </h1>
+
+            <!-- Description -->
+            <p class="text-lg text-[#d4e6ce] max-w-lg leading-relaxed">
+                Helping users understand plastic recycling and convert plastic waste into useful products. 
+                Join us in creating a sustainable future.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-wrap gap-4 pt-2">
+                <a href="convert.php" class="inline-flex items-center gap-2 px-8 py-3.5 bg-[#8bc34a] hover:bg-[#7cb342] text-[#0f3b2c] font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#8bc34a]/30">
+                    <i class="fas fa-play"></i>
+                    Start Converting
+                </a>
+                <a href="#why-matters" class="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-[#8bc34a] hover:bg-[#8bc34a]/10 text-[#d4edb0] font-semibold rounded-full transition-all duration-300">
+                    <i class="fas fa-circle-info"></i>
+                    Learn More
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="flex gap-8 pt-4 border-t border-white/10">
+                <div>
+                     <div class="text-2xl font-bold text-white counter-number"
+             data-target="<?php echo $tonsRecycled; ?>">
+            0
+        </div>
+                    <div class="text-sm text-[#d4e6ce]/60">Tons Recycled</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-white counter-number"
+             data-target="<?php echo $efficiency; ?>">
+            0
+        </div>
+                    <div class="text-sm text-[#d4e6ce]/60">Efficiency</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-white counter-number"
+             data-target="<?php echo $totalPartners; ?>">
+            0
+        </div>
+                    <div class="text-sm text-[#d4e6ce]/60">Partners</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             RIGHT - PROFESSIONAL CARD
+             ========================================== -->
+        <div class="relative">
+            <!-- Main Card -->
+            <div class="bg-gradient-to-br from-[#1a5a44]/80 to-[#0f3b2c]/80 backdrop-blur-xl rounded-2xl p-8 border border-[#8bc34a]/20 shadow-2xl relative overflow-hidden">
+                
+                <!-- Decorative Glow -->
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#8bc34a]/10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-[#8bc34a]/5 rounded-full blur-3xl"></div>
+
+                <div class="relative z-10">
+                    <!-- Large Icon -->
+                    <div class="text-center mb-6">
+                        <div class="inline-block bg-gradient-to-br from-[#8bc34a]/20 to-[#8bc34a]/5 p-6 rounded-2xl border border-[#8bc34a]/20">
+                            <i class="fas fa-recycle text-6xl text-[#8bc34a]"></i>
+                        </div>
                     </div>
 
-                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
-                        Transform Plastic Waste <br />
-                        <span class="bg-gradient-to-r from-[#d4edb0] to-[#b5e48c] bg-clip-text text-transparent">Into Useful Products</span>
-                    </h1>
+                    <!-- Title -->
+                    <h3 class="text-center text-2xl font-bold text-white mb-2">
+                        Zero Waste Future
+                    </h3>
 
-                    <p class="text-lg text-[#d4e6ce] max-w-lg leading-relaxed">
-                        Helping users understand plastic recycling and convert plastic waste into useful products. Join us in creating a sustainable future.
+                    <!-- Description -->
+                    <p class="text-center text-[#d4e6ce]/70 text-sm max-w-xs mx-auto mb-6">
+                        Every piece of plastic recycled is a step towards a cleaner, greener planet.
                     </p>
 
-                    <div class="flex flex-wrap gap-4 pt-2">
-                        <a href="convert.php" class="inline-flex items-center gap-2 px-8 py-3.5 bg-[#8bc34a] hover:bg-[#7cb342] text-[#0f3b2c] font-semibold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#8bc34a]/30">
-                            <i class="fas fa-play"></i>
-                            Start Converting
-                        </a>
-                        <a href="#why-matters" class="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-[#8bc34a] hover:bg-[#8bc34a]/10 text-[#d4edb0] font-semibold rounded-full transition-all duration-300">
-                            <i class="fas fa-circle-info"></i>
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-
-                <!-- right: modern illustration -->
-                <div class="hero-image-placeholder aspect-square md:aspect-[4/3] w-full max-w-lg mx-auto md:ml-auto flex items-center justify-center p-8 border border-[#8bc34a]/30 shadow-2xl">
-                    <div class="text-center space-y-3">
-                        <div class="text-7xl sm:text-8xl mb-2">♻️</div>
-                        <div class="flex justify-center gap-6 text-4xl">
-                            <span>🔄</span>
-                            <span>🌱</span>
-                            <span>🌍</span>
+                    <!-- Features Grid -->
+                    <div class="grid grid-cols-3 gap-3 mb-6">
+                        <div class="text-center bg-white/5 rounded-xl p-3 border border-white/5">
+                            <div class="text-2xl text-[#8bc34a]"><i class='fas fa-recycle'></i></div>
+                            <div class="text-xs text-[#d4e6ce]/60 mt-1">Recycle</div>
                         </div>
-                        <p class="text-[#d4edb0] font-medium text-sm bg-[#0f3b2c]/60 px-4 py-2 rounded-full inline-block backdrop-blur-sm border border-[#8bc34a]/20">
-                            <i class="fas fa-arrow-right mr-2"></i> Zero Waste Future
+                        <div class="text-center bg-white/5 rounded-xl p-3 border border-white/5">
+                            <div class="text-2xl text-[#8bc34a]"><i class="fas fa-sync-alt"></i>  </div>
+                            <div class="text-xs text-[#d4e6ce]/60 mt-1">Convert</div>
+                        </div>
+                        <div class="text-center bg-white/5 rounded-xl p-3 border border-white/5">
+                            <div class="text-2xl text-[#8bc34a]"><i class="fas fa-seedling"></i> </div>
+                            <div class="text-xs text-[#d4e6ce]/60 mt-1">Grow</div>
+                        </div>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                        <div class="flex justify-between text-sm text-[#d4e6ce]/60 mb-1">
+                            <span>Global Impact</span>
+                            <span>78%</span>
+                        </div>
+                        <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full w-[78%] bg-gradient-to-r from-[#8bc34a] to-[#d4edb0] rounded-full"></div>
+                        </div>
+                        <p class="text-xs text-[#d4e6ce]/40 mt-2 text-center">
+                            🌍 Progress towards 2030 goal
                         </p>
                     </div>
                 </div>
             </div>
+
+            <!-- Floating Badge -->
+            <div class="absolute -top-4 -right-4 bg-[#8bc34a] text-[#0f3b2c] text-xs font-bold px-4 py-2 rounded-full shadow-lg animate-pulse">
+                🌟 New
+            </div>
         </div>
+
+    </div>
+</div>
     </section>
 
     <!-- ============================================================
@@ -348,7 +491,7 @@
                 <div class="text-sm text-[#cde0c5]">Operations</div>
             </div>
             <div class="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10">
-                <div class="text-3xl font-bold text-[#b5e48c]">♻️</div>
+                <div class="text-3xl font-bold text-[#b5e48c]"><i class="fas fa-recycle"></i>    </div>
                 <div class="text-sm text-[#cde0c5]">Zero Waste</div>
             </div>
         </div>
@@ -424,31 +567,73 @@
                 </p>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
-                    <div class="text-4xl mb-2">♻️</div>
-                    <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]" data-target="28456">0</div>
-                    <p class="text-[#cde0c5] mt-2 font-medium">Plastic Recycled (kg)</p>
-                </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
 
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
-                    <div class="text-4xl mb-2">🌱</div>
-                    <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]" data-target="12438">0</div>
-                    <p class="text-[#cde0c5] mt-2 font-medium">Pollution Reduced (tons)</p>
-                </div>
+    <!-- Plastic -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
+        <div class="text-4xl mb-2 text-green-200">
+            <i class="fas fa-recycle"></i>
+        </div>
 
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
-                    <div class="text-4xl mb-2">🔄</div>
-                    <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]" data-target="156">0</div>
-                    <p class="text-[#cde0c5] mt-2 font-medium">Recycling Methods</p>
-                </div>
+        <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]"
+             data-target="<?php echo $totalPlastic; ?>">
+            0
+        </div>
 
-                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
-                    <div class="text-4xl mb-2">👥</div>
-                    <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]" data-target="9876">0</div>
-                    <p class="text-[#cde0c5] mt-2 font-medium">Users Educated</p>
-                </div>
-            </div>
+        <p class="text-[#cde0c5] mt-2 font-medium">
+            Plastic Recycled (kg)
+        </p>
+    </div>
+
+    <!-- Pollution -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
+        <div class="text-4xl mb-2 text-green-200">
+            <i class="fa-solid fa-leaf"></i>
+        </div>
+
+        <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]"
+             data-target="<?php echo $pollutionReduced; ?>">
+            0
+        </div>
+
+        <p class="text-[#cde0c5] mt-2 font-medium">
+            Pollution Reduced (tons)
+        </p>
+    </div>
+
+    <!-- Methods -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
+        <div class="text-4xl mb-2 text-green-200">
+            <i class="fas fa-sync-alt"></i>
+        </div>
+
+        <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]"
+             data-target="<?php echo $totalMethods; ?>">
+            0
+        </div>
+
+        <p class="text-[#cde0c5] mt-2 font-medium">
+            Recycling Methods
+        </p>
+    </div>
+
+    <!-- Users -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-all">
+        <div class="text-4xl mb-2 text-green-200">
+            <i class="fas fa-users"></i>
+        </div>
+
+        <div class="counter-number text-4xl md:text-5xl font-bold text-[#b5e48c]"
+             data-target="<?php echo $totalUsers; ?>">
+            0
+        </div>
+
+        <p class="text-[#cde0c5] mt-2 font-medium">
+            Users Educated
+        </p>
+    </div>
+
+</div>
         </div>
     </section>
 
@@ -489,11 +674,11 @@
     <!-- ============================================================
     JAVASCRIPT: Animated Counters
     ============================================================ -->
-    <script src='home.js'>
+    <script src='js/home.js'>
      
     </script>
 
-    <script src="app.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
 </html>

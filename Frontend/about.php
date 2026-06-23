@@ -1,5 +1,36 @@
 <?php include 'includes/navbar.php'; ?>
 
+<?php
+include "../Backend/configure/data_base.php";
+
+/* =========================
+   ANALYTICS (REAL DATA)
+========================= */
+
+$userQuery = mysqli_query($conn, "
+    SELECT COUNT(DISTINCT user_token) AS total_users
+    FROM conversions
+");
+$userData = mysqli_fetch_assoc($userQuery);
+$totalUsers = $userData['total_users'] ?? 0;
+
+$plasticQuery = mysqli_query($conn, "
+    SELECT SUM(value_in_kg) AS total_kg
+    FROM conversions
+");
+$plasticData = mysqli_fetch_assoc($plasticQuery);
+$totalPlastic = $plasticData['total_kg'] ?? 0;
+
+$methodQuery = mysqli_query($conn, "
+    SELECT COUNT(DISTINCT input_type) AS total_methods
+    FROM conversions
+");
+$methodData = mysqli_fetch_assoc($methodQuery);
+$totalMethods = $methodData['total_methods'] ?? 0;
+
+$pollutionReduced = ($totalPlastic > 0) ? round($totalPlastic / 1000, 2) : 0;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -212,27 +243,35 @@
                     <div class="bg-gradient-to-br from-[#d4edb0]/30 to-[#b5e48c]/20 rounded-3xl p-8 border border-[#8bc34a]/20">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all">
-                                <div class="text-4xl mb-2">♻️</div>
+                                <div class="text-4xl mb-2 text-green-800"><i class="fas fa-recycle"></i></div>
                                 <h4 class="font-bold text-[#0f3b2c] text-sm">Recycled</h4>
-                                <p class="text-2xl font-bold text-[#2d7a5a]">28K+</p>
+                          <p class="text-2xl font-bold text-[#2d7a5a]">
+    <?php echo number_format($totalPlastic); ?> kg
+</p>
                                 <p class="text-xs text-[#1a5a44]">KG Plastic</p>
                             </div>
                             <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all">
-                                <div class="text-4xl mb-2">🌱</div>
+                                <div class="text-4xl mb-2 text-green-800"><i class="fa-solid fa-leaf"></i></div>
                                 <h4 class="font-bold text-[#0f3b2c] text-sm">Reduced</h4>
-                                <p class="text-2xl font-bold text-[#2d7a5a]">12K+</p>
+                                <p class="text-2xl font-bold text-[#2d7a5a]">
+    <?php echo $pollutionReduced; ?> tons
+</p>
                                 <p class="text-xs text-[#1a5a44]">Tons CO₂</p>
                             </div>
                             <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all">
-                                <div class="text-4xl mb-2">👥</div>
+                                <div class="text-4xl mb-2 text-green-800"><i class="fas fa-users"></i></div>
                                 <h4 class="font-bold text-[#0f3b2c] text-sm">Educated</h4>
-                                <p class="text-2xl font-bold text-[#2d7a5a]">9.8K+</p>
+                                <p class="text-2xl font-bold text-[#2d7a5a]">
+    <?php echo $totalUsers; ?>
+</p>
                                 <p class="text-xs text-[#1a5a44]">Users</p>
                             </div>
                             <div class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl transition-all">
-                                <div class="text-4xl mb-2">🔄</div>
+                                <div class="text-4xl mb-2 text-green-800 ">      <i class="fas fa-arrows-rotate"></i></div>
                                 <h4 class="font-bold text-[#0f3b2c] text-sm">Methods</h4>
-                                <p class="text-2xl font-bold text-[#2d7a5a]">156</p>
+                              <p class="text-2xl font-bold text-[#2d7a5a]">
+    <?php echo $totalMethods; ?>
+</p>
                                 <p class="text-xs text-[#1a5a44]">Recycling</p>
                             </div>
                         </div>
@@ -341,28 +380,28 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Benefit 1 -->
                 <div class="hover-card bg-[#f4faf5] rounded-2xl p-6 text-center">
-                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4">🌱</div>
+                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4"><i class="fa-solid fa-leaf"></i></div>
                     <h3 class="text-lg font-bold text-[#0f3b2c] mb-2">Reduce Pollution</h3>
                     <p class="text-sm text-[#1a5a44]">Decrease plastic waste in landfills and oceans, reducing environmental contamination.</p>
                 </div>
 
                 <!-- Benefit 2 -->
                 <div class="hover-card bg-[#f4faf5] rounded-2xl p-6 text-center">
-                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4">⛰️</div>
+                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4"><i class="fas fa-mountain"></i>  </div>
                     <h3 class="text-lg font-bold text-[#0f3b2c] mb-2">Save Resources</h3>
                     <p class="text-sm text-[#1a5a44]">Conserve natural resources like oil and water used in plastic production.</p>
                 </div>
 
                 <!-- Benefit 3 -->
                 <div class="hover-card bg-[#f4faf5] rounded-2xl p-6 text-center">
-                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4">🐠</div>
+                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4"><i class="fas fa-fish"></i> </div>
                     <h3 class="text-lg font-bold text-[#0f3b2c] mb-2">Protect Marine Life</h3>
                     <p class="text-sm text-[#1a5a44]">Prevent marine animals from ingesting or getting entangled in plastic waste.</p>
                 </div>
 
                 <!-- Benefit 4 -->
                 <div class="hover-card bg-[#f4faf5] rounded-2xl p-6 text-center">
-                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4">🔄</div>
+                    <div class="benefit-icon text-5xl text-[#2d7a5a] mb-4"> <i class="fas fa-sync-alt"></i>  </div>
                     <h3 class="text-lg font-bold text-[#0f3b2c] mb-2">Create Useful Products</h3>
                     <p class="text-sm text-[#1a5a44]">Transform waste into valuable products, creating a circular economy.</p>
                 </div>
@@ -425,19 +464,20 @@
             <!-- core values -->
             <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div class="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div class="text-2xl mb-1">♻️</div>
+                    <div class="text-2xl mb-1 text-green-200"><i class="fas fa-recycle"></i></div>
                     <p class="text-sm text-[#cde0c5]">Sustainability</p>
                 </div>
                 <div class="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div class="text-2xl mb-1">🤝</div>
+                    <div class="text-2xl mb-1 text-green-200"><i class="fas fa-handshake"></i></div>
                     <p class="text-sm text-[#cde0c5]">Community</p>
                 </div>
                 <div class="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div class="text-2xl mb-1">💡</div>
+                    <div class="text-2xl mb-1 text-green-200"><i class="fas fa-lightbulb"></i> </div>
                     <p class="text-sm text-[#cde0c5]">Innovation</p>
                 </div>
                 <div class="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div class="text-2xl mb-1">🌍</div>
+                     
+                    <div class="text-2xl mb-1 text-green-200"> <i class="fas fa-earth-americas"></i></div>
                     <p class="text-sm text-[#cde0c5]">Environment</p>
                 </div>
             </div>
@@ -539,7 +579,7 @@
                     <i class="fas fa-recycle"></i>
                 </div>
 
-                <div class="text-6xl mb-6">🌍</div>
+                <div class="text-6xl mb-6 text-green-300"><i class="fas fa-earth-americas"></i></div>
                 <h2 class="text-3xl md:text-5xl font-bold leading-tight">
                     Join the Movement for a <br />
                     <span class="text-[#b5e48c]">Cleaner Planet</span>
@@ -606,7 +646,7 @@
         })();
     </script>
 
-<script src="app.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
 

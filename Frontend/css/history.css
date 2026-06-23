@@ -6,7 +6,10 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f0f7f2;
+     /* overflow-x: hidden; */
 }
+
+
 
 /* glassmorphism */
 .glass-card {
@@ -50,9 +53,9 @@ body {
    ============================================ */
 
 .history-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    width: max-content;
+    min-width: 100%;
+    height: auto;
 }
 
 .history-table thead th {
@@ -113,11 +116,19 @@ body {
 }
 
 /* Table container */
-.table-container {
-    display: block !important;
-    overflow-x: auto !important;
+.table-container{
+    width:100%;
+     overflow-x: auto; /* sirf left-right scroll */
+    overflow-y: visible; /* upar-niche scroll band */
+    max-height: none;
+    border-radius:12px;
+    border:1px solid #e8f0e8;
 }
 
+.history-table th,
+.history-table td {
+    white-space: nowrap;
+}
 .table-container::-webkit-scrollbar {
     height: 8px;
 }
@@ -266,101 +277,5 @@ body {
 
 /* ============================================
    FORCE TABLE VISIBILITY - FINAL FIX
-   ============================================ */
+ 
 
-/* Table body ko force karo */
-#historyTableBody {
-    display: table-row-group !important;
-    background: white !important;
-    width: 100% !important;
-}
-
-/* Table rows ko force karo */
-#historyTableBody tr {
-    display: table-row !important;
-    background: white !important;
-}
-
-/* Table cells ko force karo */
-#historyTableBody td {
-    display: table-cell !important;
-    padding: 12px 15px !important;
-    color: #1a5a44 !important;
-    font-size: 14px !important;
-    border-bottom: 1px solid #e5e7eb !important;
-    background: white !important;
-}
-
-/* Table container */
-.table-container {
-    display: block !important;
-    overflow: visible !important;
-}
-
-/* Badge */
-.badge-success {
-    display: inline-block !important;
-    background: #d4edda !important;
-    color: #155724 !important;
-    padding: 4px 12px !important;
-    border-radius: 20px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-}
-
-
-
-/* ============================================
-   FINAL FIX - FORCE TABLE VISIBILITY
-   ============================================ */
-
-/* Table body ko force visible karo */
-#historyTableBody {
-    display: table-row-group !important;
-    background: white !important;
-    width: 100% !important;
-}
-
-/* Table rows ko force visible karo */
-#historyTableBody tr {
-    display: table-row !important;
-    background: white !important;
-    border-bottom: 1px solid #e5e7eb !important;
-}
-
-/* Table cells ko force visible karo */
-#historyTableBody td {
-    display: table-cell !important;
-    padding: 12px 15px !important;
-    color: #1a5a44 !important;
-    font-size: 14px !important;
-    background: white !important;
-    border-bottom: 1px solid #e5e7eb !important;
-}
-
-/* Badge ko visible karo */
-.badge-success {
-    display: inline-block !important;
-    background: #d4edda !important;
-    color: #155724 !important;
-    padding: 4px 12px !important;
-    border-radius: 20px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-}
-
-/* Table container */
-.table-container {
-    display: block !important;
-    overflow: visible !important;
-    background: white !important;
-    border-radius: 16px !important;
-    padding: 0 !important;
-}
-
-/* History table */
-.history-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    background: white !important;
-}

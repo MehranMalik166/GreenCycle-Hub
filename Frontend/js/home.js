@@ -3,6 +3,11 @@
 
             // ----- animated counters (Intersection Observer) -----
             const counters = document.querySelectorAll('.counter-number');
+        //      console.log({
+        // target: el.getAttribute('data-target'),
+        // text: el.innerText,
+        // element: el
+    // });
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
